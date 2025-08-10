@@ -41,19 +41,20 @@ Quotify is a platform where:
 ---
 
 ## Folder Structure
+```
 app/
-(public)/ → Marketing or public routes
-(client)/client → Client dashboard, jobs
-(provider)/provider → Provider dashboard, jobs
-(admin)/admin → Admin panel
-api/ → API routes or server actions
-components/ → Shared UI components
-lib/ → Utilities (auth, db, validations, rate-limit)
-prisma/ → schema.prisma, migrations, seed.ts
-styles/ → globals.css
-tests/ → Unit and E2E tests
-scripts/ → Seeding and maintenance scripts
-
+  (public)/         → Marketing or public routes
+  (client)/client   → Client dashboard, jobs
+  (provider)/provider → Provider dashboard, jobs
+  (admin)/admin     → Admin panel
+  api/              → API routes or server actions
+components/         → Shared UI components
+lib/                → Utilities (auth, db, validations, rate-limit)
+prisma/             → schema.prisma, migrations, seed.ts
+styles/             → globals.css
+tests/              → Unit and E2E tests
+scripts/            → Seeding and maintenance scripts
+```
 
 ---
 
@@ -71,3 +72,155 @@ scripts/ → Seeding and maintenance scripts
 
 ---
 
+## Getting Started
+
+### Prerequisites
+- Node.js LTS
+- pnpm or npm
+- PostgreSQL (Neon/Supabase recommended)
+- Vercel account
+- Email provider key (Resend/Postmark)
+
+---
+
+### Installation
+```
+git clone <your-repo-url>
+cd quotify
+pnpm install
+```
+
+---
+
+### Environment Variables
+Create `.env` (and `.env.local` for local dev):
+```
+DATABASE_URL=postgres://user:pass@host:port/db
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-strong-secret
+EMAIL_FROM=notifications@yourdomain.com
+RESEND_API_KEY=your_resend_key
+# Optional:
+PUSHER_APP_ID=...
+PUSHER_KEY=...
+PUSHER_SECRET=...
+PUSHER_CLUSTER=...
+STRIPE_SECRET_KEY=...
+STRIPE_WEBHOOK_SECRET=...
+```
+
+---
+
+### Database Setup
+```
+pnpm prisma generate
+pnpm prisma migrate dev
+pnpm ts-node prisma/seed.ts
+```
+
+---
+
+### Run Development Server
+```
+pnpm dev
+```
+App runs at: **http://localhost:3000**
+
+---
+
+## Feature Walkthrough
+
+### Clients
+- Post a job via chat-like or multi-step form
+- Get auto-generated job summary
+- Receive & compare provider quotes
+- Accept a quote → starts project + messaging thread
+- Dashboard: jobs, statuses, spend summary
+- Leave provider reviews
+
+### Providers
+- Browse/filter jobs
+- Submit quotes (price, timeline, pitch)
+- Chat after quote acceptance
+- Dashboard: jobs, quotes, earnings
+- Profile: skills, portfolio, about
+
+### Admins
+- Manage categories, users, jobs
+- Verify providers, handle disputes
+- View platform analytics
+
+---
+
+## Security & Access
+- Role-based routes via middleware + server-side checks
+- Zod validation for all writes
+- Rate limiting for sensitive actions
+- File upload validation (if enabled)
+
+---
+
+## Scripts
+```
+pnpm dev        # Start dev server
+pnpm build      # Build for production
+pnpm start      # Start production server
+pnpm prisma:generate
+pnpm prisma:migrate
+pnpm seed
+pnpm test
+pnpm lint
+pnpm format
+```
+
+---
+
+## Testing
+- **Unit:** Zod schemas & server actions
+- **E2E:** Playwright — register → post job → quote → accept → message → complete → review
+- Use a dedicated test database with seed fixtures
+
+---
+
+## Deployment
+- **Frontend/API:** Vercel
+- **Database:** Neon/Supabase (pooled connections)
+- **Prisma:** Ensure `prisma generate` runs during build
+- **Webhooks:** `/api/stripe/webhook` (if using payments)
+
+---
+
+## Roadmap
+- **v1 (MVP):** Auth, intake, quotes, messaging, dashboards, email notifications, reviews, admin basics
+- **v1.1:** Chat-like intake UI, in-app notifications, search & filters
+- **v1.2:** Realtime chat, provider verification, advanced analytics
+- **v2:** Stripe escrow, AI-assisted intake & summaries
+
+---
+
+## Troubleshooting
+- **DB connection errors:** Check `DATABASE_URL` & run migrations
+- **Missing roles in session:** Update NextAuth callbacks
+- **403 errors:** Verify middleware & role checks
+- **Email issues:** Confirm API keys & sender domain
+- **Vercel build fails:** Ensure `prisma generate` runs
+
+---
+
+## License
+MIT License (recommended) — add a `LICENSE` file.
+
+---
+
+## Credits
+- Built with **Next.js**, **Prisma**, **Tailwind CSS**, **shadcn/ui**
+- Initial product spec & implementation plan by the Quotify team
+
+---
+
+## Screenshots (Placeholder)
+_Add screenshots or GIFs here:_
+- Client job posting
+- Provider job list & quote form
+- Messaging thread
+- Admin dashboard
